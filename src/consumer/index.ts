@@ -25,23 +25,38 @@ const handle = async (eventDTO: EventDTO) => {
             return true //Apply here logic to handle bad events
     } catch (err) {
         logger.info(err);
-        return true
+        return true //Apply here logic to handle bad payloads
     }
 
     try {
         await recordTransaction(event.payload)
-    } catch (e) {
-        console.log(e);
+    } catch (err) {
+        //Error type has to be determined
+        console.log(err);
     }
     return true;
 };
 
+/**
+ * Takes an Event DTO (plain json) and convert it to an instance of Event
+ * Validates the new created object (see entities.ts for more details) or rejects it by raising an exception
+ *
+ * @param {EventDTO} eventDTO
+ * @return Promise<Event>
+ */
 
-const validateAndTransform = async (eventDTO: EventDTO): Promise<Event> => {
+
+export const validateAndTransform = async (eventDTO: EventDTO): Promise<Event> => {
     let event = plainToClass(Event, eventDTO)
     await validateOrReject(event)
     return event
 }
+
+/**
+ * Stores the transaction in the database
+ * Also creates bank account and client if needed
+ * @param {Transaction} transaction
+ */
 
 const recordTransaction = async (transaction: Transaction) => {
     const user = await getUserById(transaction.userId)
