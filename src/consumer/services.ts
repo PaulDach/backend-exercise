@@ -1,5 +1,6 @@
 import getDatabase from "../utils/database";
 import {BankAccount, Transaction, User} from "./entities";
+import logger from "../utils/logger";
 
 export const getUserById = async (userId: string): Promise<User | undefined> => {
     const db = await getDatabase()
@@ -38,10 +39,15 @@ export const insertTransaction = async (transaction: Transaction) => {
 
 export const insertUser = async (user: User) => {
     const db = await getDatabase()
-    const result = await db.run('INSERT OR REPLACE INTO users(user_id) VALUE(?)', user.userId)
+    try {
+        const result = await db.run('INSERT OR REPLACE INTO users(user_id) VALUES(?)', user.userId)
+    } catch (e) {
+        logger.error('Error in insertUser')
+    }
 }
 
 export const insertBankAccount = async (bankAccount: BankAccount) => {
     const db = await getDatabase()
-    const result = await db.run('INSERT OR REPLACE INTO bank_accounts(bank_account_id, user_id, amount) VALUE(?, ?, ?)', bankAccount.userId, bankAccount.userId, bankAccount.amount)
+    const result = await db.run('INSERT OR REPLACE INTO bank_accounts(bank_account_id, user_id, amount) VALUES(?, ?, ?)',
+        bankAccount.userId, bankAccount.userId, bankAccount.amount)
 }

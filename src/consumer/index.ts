@@ -18,20 +18,22 @@ import {getBankAccountById, getUserById, insertBankAccount, insertTransaction, i
 const handle = async (eventDTO: EventDTO) => {
 
     let event: Event
+    logger.info('Event received', {eventDTO});
     try {
-        logger.info('Event received', {eventDTO});
-        try {
-            event = await validateAndTransform(eventDTO)
-        } catch (err) {
-            logger.info(err);
-            return false
-        }
-
-        await recordTransaction(event.payload)
-        return true;
+        event = await validateAndTransform(eventDTO)
+        if (event.retry > 5)
+            return true //Apply here logic to handle bad events
     } catch (err) {
-        return false;
+        logger.info(err);
+        return true
     }
+
+    try {
+        await recordTransaction(event.payload)
+    } catch (e) {
+        console.log(e);
+    }
+    return true;
 };
 
 
