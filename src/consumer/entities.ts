@@ -1,4 +1,4 @@
-import {Equals, IsDate, IsDefined, IsIn, IsNumber, IsString, ValidateNested} from "class-validator";
+import {Equals, IsDate, IsDefined, IsIn, IsNumber, IsObject, IsString, ValidateNested} from "class-validator";
 import {Type} from "class-transformer";
 
 export interface EventDTO {
@@ -27,6 +27,7 @@ export class Transaction {
     @IsString()
     bankAccountId!: string
 
+    @IsDefined()
     @IsString()
     category!: string
 
@@ -34,6 +35,7 @@ export class Transaction {
     @IsString()
     userId!: string
 
+    @IsDefined()
     @IsDate()
     @Type(() => Date)
     createdAt!: Date
@@ -41,6 +43,7 @@ export class Transaction {
     @Equals('EUR')
     currency!: string
 
+    @IsDefined()
     @IsString()
     description!: string
 
@@ -48,9 +51,13 @@ export class Transaction {
     @Type(() => Date)
     executedAt!: Date
 
-    paymentMethod!: string
+    @IsDefined()
+    @IsIn(["CARD", "CHECK", "DIRECT_DEBIT", "TRANSFER"])
+    paymentMethod!:
+        string
 
     @IsString()
+    @IsIn(["PENDING", "CANCELED", "VALIDATED"])
     status!: string
 
     @IsString()
@@ -63,6 +70,8 @@ export class Transaction {
     @IsString()
     transactionId!: string
 
+    @IsString()
+    @IsIn(["PAYIN", "PAYOUT"])
     type!: string
 
     @IsDate()
