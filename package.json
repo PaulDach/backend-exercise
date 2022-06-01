@@ -22,6 +22,10 @@
     "type-check": "yarn tsc --noEmit"
   },
   "dependencies": {
+    "@types/validator": "^13.7.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "reflect-metadata": "^0.1.13",
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",
     "winston": "^3.3.3"
