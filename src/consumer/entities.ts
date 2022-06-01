@@ -22,7 +22,7 @@ export class Event {
     retry!: number
 }
 
-class Transaction {
+export class Transaction {
     @IsDefined()
     @IsString()
     bankAccountId!: string
@@ -78,7 +78,9 @@ export class User {
     transactions?: Transaction[]
 }
 
-export class ISS {
-    @IsString()
-    ok!: string
+export class BankAccount {
+    bankAccountId!: string
+    userId!: string
+    amount!: number
+    transactions?: Transaction[]
 }
